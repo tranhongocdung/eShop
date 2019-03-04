@@ -1,0 +1,21 @@
+﻿@model List<Product>
+    
+<div class="list-group">
+    @foreach (var product in Model)
+    {
+        <button type="button" class="list-group-item" 
+                data-product-id="@product.Id" 
+                data-product-name="@product.ProductName" 
+                data-original-price="@product.OriginalPrice" 
+                data-short-description="@product.ShortDescription"
+        >
+            <strong>@product.ProductName</strong>&nbsp;|&nbsp;
+            @if (!string.IsNullOrEmpty(product.ShortDescription))
+            {
+                <span>@product.ShortDescription</span>
+            }
+            &nbsp;-&nbsp;
+            <span class="italic"></span>
+        </button>
+    }
+</div>

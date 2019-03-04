@@ -1,0 +1,98 @@
+﻿@model OrderManageViewModel
+
+<div class="col-md-12">
+    <table class="table table-hover" id="order-table">
+        <thead>
+        <tr>
+            <th class="text-center"></th>
+            <th class="text-center">ID</th>
+            <th>Customer</th>
+            <th class="text-center" style="width: 100px">Total Cash</th>
+            <th class="text-center" style="width: 100px">Discount</th>
+            <th class="text-center" style="width: 100px">Real Cash</th>
+            <th class="text-center" style="width: 100px">Created On</th>
+            <th class="text-center" style="width: 120px">Created By</th>
+            <th style="width: 135px"></th>
+        </tr>
+        </thead>
+        <tbody>
+            @{ var odd = true; }
+            @foreach (var item in Model.Orders)
+            {
+                <tr data-order-id="@item.Id" class="
+                    @(item.OrderStatusId == OrderStatus.Completed ? "table-success" : "") 
+                    @(item.OrderStatusId == OrderStatus.Cancelled ? "table-danger" : "") 
+                    ">
+                    <td class="details-control"></td>
+                    <td class="text-center">@item.Id</td>
+                    <td class="italic">@item.Customer.SuggestName</td>
+                    <td class="text-center text-success"><strong>@item.TotalCash.ToString("#,##0")</strong></td>
+                    <td class="text-center">@item.DiscountString</td>
+                    <td class="text-center text-danger"><strong>@item.RealCash.ToString("#,##0")</strong></td>
+                    
+                    <td class="text-center">@item.CreatedOn.ToString("dd/MM/yyyy")</td>
+                    <td class="text-center">
+                        @if (item.CreatedBy != null)
+                        {
+                            <strong class="text-primary italic">@item.CreatedBy.DisplayName</strong>
+                        }
+                        else
+                        {
+                            <strong class="text-primary">...</strong>
+                        }
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group order-btn-group" role="group" aria-label="...">
+                            @if (item.OrderStatusId == OrderStatus.Pending)
+                            {
+                                <button type="button" class="btn btn-success complete-order" title="Complete">
+                                    <img src="~/Content/images/ajax-loader-1.gif" style="display: none"/>
+                                    <span class="glyphicon glyphicon-ok-circle"></span>
+                                </button>
+                            }
+                            <a href="@Url.Action("Edit", new {id = item.Id})" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span></a>
+                            @if (item.OrderStatusId == OrderStatus.Pending)
+                            {
+                                <button type="button" class="btn btn-danger cancel-order" title="Cancel">
+                                    <img src="~/Content/images/ajax-loader-1.gif" style="display: none"/>
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            }
+                            @if (item.OrderStatusId == OrderStatus.Cancelled)
+                            {
+                                <button type="button" class="btn btn-warning restore-order" title="Restore">
+                                    <img src="~/Content/images/ajax-loader-1.gif" style="display: none" />
+                                    <span class="glyphicon glyphicon-repeat"></span>
+                                </button>
+                            }
+                        </div>
+                    </td>
+                </tr>
+                odd = !odd;
+            }
+        </tbody>
+    </table>
+    @Html.PagerBootstrap(Model.ItemCount, Model.PageSize)
+    <table class="table hidden table-sm details-table" id="extend-for-search">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th class="text-center">Unit price</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-center">ToCash</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Orders.SelectMany(o=>o.OrderDetails))
+            {
+                <tr data-order-id="@item.OrderId">
+                    <td>@item.ProductVariant.Product.ProductName</td>
+                    <td class="text-center text-primary">@item.SellingPrice</td>
+                    <td class="text-center">@item.Quantity</td>
+                    <td class="text-center text-success">@((item.SellingPrice*item.Quantity))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

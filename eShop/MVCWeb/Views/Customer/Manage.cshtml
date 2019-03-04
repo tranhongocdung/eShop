@@ -1,0 +1,61 @@
+﻿@model CustomerManageViewModel
+@{
+    ViewBag.Title = "Manage customer";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+<div class="row">
+    <br />
+    <div class="message-alert" id="alert-container"></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Manage customer
+            </div>
+            <div class="panel-body">
+                @using (Ajax.BeginForm("Manage", "Customer", new AjaxOptions
+                {
+                    OnSuccess = "customerManageCallBack",
+                    LoadingElementId = "manageLoading"
+                }, new {@id = "frmCustomerManage"}))
+                {
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>Keyword:</label>
+                                @Html.TextBoxFor(m => m.Keyword, new {@class = "form-control", @id = "txtKeyword", @placeholder = "Keyword..."})
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary btn-block" id="btnSubmit" type="button">
+                                    <img src="~/Content/images/ajax-loader-1.gif" id="manageLoading" style="display: none"/>
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="manager-content">
+                        @Html.Partial("_CustomerTable")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="edit-customer-url" value="@Url.Action("Edit", "Customer")"/>
+
+@section OptionalCss
+{
+    <link href="~/Content/typeahead/typeahead-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/summernote/summernote.css" rel="stylesheet" />
+}
+
+@section OptionalJs {
+    <script src="~/Content/typeahead/typeahead.bundle.js"></script>
+    <script src="~/Content/summernote/summernote.min.js"></script>
+    <script src="~/Scripts/views/customer-manage.js"></script>
+}

@@ -1,0 +1,83 @@
+﻿@model ProductManageViewModel
+@{
+    ViewBag.Title = "Manage product";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+<div class="row">
+    <br />
+    <div class="message-alert" id="alert-container"></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title pull-left">Manage product</h3>
+                @if (User.IsAdmin())
+                {
+                    <button class="btn btn-success btn-sm pull-right manage-category">Categories</button>    
+                }
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                @using (Ajax.BeginForm("Manage", "Product", new AjaxOptions
+                {
+                    OnSuccess = "productManageCallBack",
+                    LoadingElementId = "manageLoading"
+                }, new {@id = "frmProductManage"}))
+                {
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Keyword:</label>
+                                @Html.TextBoxFor(m => m.Keyword, new {@class = "form-control", @id = "txtKeyword", @placeholder = "Keyword by name..."})
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Category:</label>
+                                @Html.DropDownListFor(m => m.CategoryId, new SelectList(
+                                    Model.Categories.Select(o => new {Value = o.Id, Text = o.CategoryName}), "Value", "Text"), new {@class = "form-control"})
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary btn-block" id="btnSubmit" type="button">
+                                    <img src="~/Content/images/ajax-loader-1.gif" id="manageLoading" style="display: none"/>
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="button" class="btn btn-success btn-block add-product" data-product-id="0"><span class="glyphicon glyphicon-plus"></span> Add new product</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="manager-content">
+                        @Html.Partial("_ProductTable")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="product-edit-url" value="@Url.Action("Edit", "Product")"/>
+
+@section OptionalCss
+{
+    <link href="~/Content/typeahead/typeahead-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/summernote/summernote.css" rel="stylesheet" />
+    <link href="~/Content/hummingbird-treeview/hummingbird-treeview.css" rel="stylesheet" />
+}
+
+@section OptionalJs {
+    <script src="~/Content/typeahead/typeahead.bundle.js"></script>
+    <script src="~/Content/summernote/summernote.min.js"></script>
+    <script src="~/Content/hummingbird-treeview/hummingbird-treeview.js"></script>
+    <script src="~/Scripts/confirmation/bootstrap-confirmation.min.js"></script>
+    <script src="~/Scripts/views/product-manage.js"></script>
+}

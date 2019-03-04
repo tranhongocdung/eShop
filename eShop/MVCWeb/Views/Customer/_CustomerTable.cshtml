@@ -1,0 +1,35 @@
+﻿@model CustomerManageViewModel
+
+<div class="col-md-12">
+    <table class="table table-hover" id="customer-table">
+        <thead>
+            <tr>
+                <th>Customer name</th>
+                <th class="text-center">Phone</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Address</th>
+                <th style="width: 42px"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var odd = true; }
+            @foreach (var item in Model.Customers)
+            {
+                <tr>
+                    <td class="italic">@item.CustomerName</td>
+                    <td class="text-center text-success">@item.PhoneNo</td>
+                    <td class="text-center text-primary">@item.Email</td>
+                    <td class="text-center text-danger">@item.FullAddress</td>
+                    <td class="text-right">
+                        <div class="btn-group order-btn-group" role="group" aria-label="...">
+                            <button type="button" class="btn btn-primary edit-customer" data-customer-id="@item.Id"><span class="glyphicon glyphicon-edit"></span></button>
+                        </div>
+                    </td>
+                </tr>
+                odd = !odd;
+            }
+        </tbody>
+    </table>
+    @Html.PagerBootstrap(Model.ItemCount, Model.PageSize)
+</div>
+

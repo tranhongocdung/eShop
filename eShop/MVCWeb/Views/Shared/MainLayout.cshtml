@@ -1,0 +1,114 @@
+﻿@using MVCWeb.Cores
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Page-Level Plugin CSS - Tables -->
+    <link href="~/Content/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="~/Content/css/sb-admin.css" rel="stylesheet">
+    @RenderSection("OptionalCss", false)
+    <link href="~/Content/site.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">@AppSetting.Get("SiteHeader")</span>
+            </div>
+            <ul class="nav navbar-top-links navbar-right">
+                @if (User != null)
+                {
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-user fa-fw"></i> @User.DisplayName &nbsp; <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="javascript:{}" class="change-password"><i class="fa fa-gear fa-fw"></i> Change password</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="@Url.Action("Logout", "User")"><i class="fa fa-sign-out fa-fw"></i> Log out</a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                }
+            </ul>
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        @*<li class="sidebar-search">
+                            <img src="/Content/images/logo.png" class="center-block" style="width: 130px"/>
+                        </li>*@
+                        <li>
+                            <a href="@Url.Action("Edit","Order", new {id = ""})"><i class="fa fa-list-alt fa-fw"></i> Create order</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Manage", "Order")"><i class="fa fa-book fa-fw"></i> Order history</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Manage", "Customer")"><i class="fa fa-user fa-fw"></i> Customer</a>
+                        </li>
+                        @if (User.IsAdmin())
+                        {
+                            <li>
+                                <a href="@Url.Action("Manage", "Product")"><i class="fa fa-shopping-cart fa-fw"></i> Product</a>
+                            </li>
+                        }
+                        
+                    </ul>
+                    <!-- /#side-menu -->
+                    @*<div class="panel">
+                        <div class="panel-body"></div>
+                    </div>*@
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+        <div id="page-wrapper">
+            @RenderBody()
+        </div>
+    </div>
+
+    <input type="hidden" id="change-password-url" value="@Url.Action("ChangePassword", "User")"/>
+    <div id="hidden-content" class="hidden"></div>
+    <div id="modal-content" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+
+    <script src="~/Scripts/jquery-2.2.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Content/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Content/datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/Content/datepicker/js/bootstrap-datepicker.vi.js"></script>
+    <script src="~/Content/js/sb-admin.js"></script>
+    <script src="~/Scripts/lib.js"></script>
+    <script src="~/Scripts/views/change-password.js"></script>
+    <script type="text/javascript">
+        SessionUpdater.Setup('@Url.Action("KeepSessionAlive","Home")');
+    </script>
+    @RenderSection("OptionalJs", false)
+</body>
+
+</html>

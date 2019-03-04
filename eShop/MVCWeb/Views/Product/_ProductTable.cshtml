@@ -1,0 +1,31 @@
+﻿@model ProductManageViewModel
+
+<div class="col-md-12">
+    <table class="table table-hover" id="product-table">
+        <thead>
+            <tr>
+                <th>Product name</th>
+                <th>Category</th>
+                <th class="text-center">Description</th>
+                <th class="text-center">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var odd = true; }
+            @foreach (var item in Model.Products)
+            {
+            <tr>
+                <td class="italic">@item.ProductName</td>
+                <td class="text-primary">
+                    @item.CategoryListForTableView
+                </td>
+                <td class="text-center text-success">@item.ShortDescription</td>
+                <td class="text-center text-success"></td>
+            </tr>
+                odd = !odd;
+            }
+        </tbody>
+    </table>
+    @Html.PagerBootstrap(Model.ItemCount, Model.PageSize)
+</div>
+

@@ -1,0 +1,104 @@
+﻿@model OrderManageViewModel
+
+@{
+    ViewBag.Title = "Manage order";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+}
+
+<div class="row">
+    <br />
+    <div class="message-alert" id="alert-container"></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Manage order
+            </div>
+            <div class="panel-body">
+                @using (Ajax.BeginForm("Manage", "Order", new AjaxOptions
+                {
+                    OnSuccess = "orderManageCallBack",
+                    LoadingElementId = "manageLoading"
+                }, new {@id = "frmOrderManage"}))
+                {
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Search by customer:</label>
+                                @Html.TextBoxFor(m => m.CustomerIds, new {@id = "txtCustomerIds", @placeholder = "Keyword..."})
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Order status</label>
+                                <select class="form-control" name="StatusId" id="ddlStatusId">
+                                    <option value="0">Tất cả</option>
+                                    <option value="@OrderStatus.Pending">Pending</option>
+                                    <option value="@OrderStatus.Completed">Completed</option>
+                                    <option value="@OrderStatus.Cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>From date</label>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.FromDate, new {@class = "form-control datepicker-control", @readonly = "readonly", @id = "txtFromDate", @placeholder = "Start date..."})
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger remove-date" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>To date</label>
+                                <div class="input-group">
+                                    @Html.TextBoxFor(m => m.ToDate, new {@class = "form-control datepicker-control", @readonly = "readonly", @id = "txtToDate", @placeholder = "End date..."})
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger remove-date" type="button"><span class="glyphicon glyphicon-remove"></span></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-primary btn-block" id="btnSubmit" type="button">
+                                    <img src="~/Content/images/ajax-loader-1.gif" id="manageLoading" style="display: none"/>
+                                    <span class="glyphicon glyphicon-search"></span> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="manager-content">
+                        @Html.Partial("_OrderTable")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="payment-history-url" value="@Url.Action("PaymentHistory", "Order")" />
+<input type="hidden" id="complete-order-url" value="@Url.Action("Complete", "Order")" />
+<input type="hidden" id="restore-order-url" value="@Url.Action("Restore", "Order")"/>
+<input type="hidden" id="cancel-order-url" value="@Url.Action("Cancel","Order")" />
+<input type="hidden" id="customer-suggestion-datasource" value="@Url.Action("GetCustomerSuggestion", "DataSource")" />
+
+@section OptionalCss {
+    <link href="~/Content/datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="~/Content/typeahead/typeahead-bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/datatables/datatables.min.css" rel="stylesheet" />
+}
+
+@section OptionalJs {
+    <script src="~/Content/typeahead/typeahead.bundle.js"></script>
+    <script src="~/Content/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+    <script src="~/Scripts/confirmation/bootstrap-confirmation.min.js"></script>
+    <script src="~/Content/datatables/datatables.min.js"></script>
+    <script src="~/Scripts/views/order-manage.js"></script>
+}
